@@ -168,7 +168,9 @@ function AuthCard({ authMode, setAuthMode, authForm, setAuthForm, handleAuth, bu
 }
 
 function Dashboard({ user, capsules, form, setForm, handleCreate, handleDelete, notice, busy, scheduled, sent }) {
-  const minDate = new Date(Date.now() + 60000).toISOString().slice(0, 16);
+  const minTime = new Date(Date.now() + 60000);
+  const localOffset = minTime.getTimezoneOffset() * 60000;
+  const minDate = new Date(minTime.getTime() - localOffset).toISOString().slice(0, 16);
   return (
     <>
       <section className="dashboard-heading">

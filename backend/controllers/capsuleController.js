@@ -8,7 +8,7 @@ async function createCapsule(req, res) {
       return res.status(400).json({ message: "Please fill in every field." });
     }
 
-    const date = new Date(deliveryDate);
+    const date = new Date(`${deliveryDate}+05:30`);
     if (Number.isNaN(date.getTime()) || date.getTime() <= Date.now()) {
       return res.status(400).json({ message: "Choose a delivery date and time in the future." });
     }

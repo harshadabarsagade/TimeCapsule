@@ -182,3 +182,22 @@
     border-right-color: var(--border);
   }
 }
+.delete-link {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 9px 16px;
+  background: #fff1f0;
+  color: #d93025;
+  border: 1px solid #f5c2c0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.delete-link:hover {
+  background: #d93025;
+  color: white;
+}
+
+
