@@ -1,17 +1,34 @@
+const nodemailer = require("nodemailer");
 
-const { Resend } = require("resend");
+let transporter;
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getTransporter() {
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    throw new Error("GMAIL_USER or GMAIL_APP_PASSWORD is missing");
+  }
+
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD.replace(/\s/g, "")
+      }
+    });
+  }
+
+  return transporter;
+}
 
 async function sendCapsuleEmail(capsule) {
   try {
-    if (!process.env.RESEND_API_KEY) {
-      throw new Error("RESEND_API_KEY is missing");
-    }
+    const mailer = getTransporter();
 
-    const { data, error } = await resend.emails.send({
-      from: "TimeCapsule <onboarding@resend.dev>",
-      to: [capsule.recipientEmail],
+    const info = await mailer.sendMail({
+      from: `"TimeCapsule" <${process.env.GMAIL_USER}>`,
+      to: capsule.recipientEmail,
       subject: `A message from the past: ${capsule.subject}`,
 
       text:
@@ -26,22 +43,17 @@ async function sendCapsuleEmail(capsule) {
           <p>Hello ${escapeHtml(capsule.recipientName)},</p>
           <p>You have received a TimeCapsule message:</p>
           <div style="background:#f4f2ff;padding:20px;border-radius:12px;white-space:pre-wrap">${escapeHtml(capsule.message)}</div>
-          <p style="color:#68738a;font-size:13px">This message was scheduled in advance with TimeCapsule.</p>
+          <p style="color:#68738a;font-size:13px">
+            This message was scheduled in advance with TimeCapsule.
+          </p>
         </div>`
     });
 
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    console.log("Email sent successfully:", data.id);
-    return data;
+    console.log("Email sent successfully:", info.messageId);
+    return info;
 
   } catch (error) {
-    console.error("Email sending failed:", {
-      message: error.message
-    });
-
+    console.error("Email sending failed:", error.message);
     throw error;
   }
 }
