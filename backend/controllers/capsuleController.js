@@ -142,12 +142,12 @@ async function deleteCapsule(req, res) {
     const capsule = await Capsule.findOneAndDelete({
       _id: req.params.id,
       owner: req.user.id,
-      status: "scheduled"
+      status: { $ne: "sending" }
     });
 
     if (!capsule) {
       return res.status(404).json({
-        message: "Scheduled capsule not found."
+        message: "Capsule not found or cannot be deleted."
       });
     }
 
