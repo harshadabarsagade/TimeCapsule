@@ -643,6 +643,8 @@ footer {
 }
 
 .capsule-card {
+  flex-shrink: 0;
+  min-height: fit-content;
   position: relative;
   overflow: hidden;
   border: 1px solid #ece9f5;
