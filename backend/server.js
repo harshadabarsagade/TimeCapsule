@@ -16,7 +16,8 @@ if (!process.env.JWT_SECRET) {
 const allowedOrigins = [
   "http://localhost:5173",
   "https://time-capsule-8wyc.vercel.app",
-  "https://time-capsule-1-aptn7m0bx-harshadabarsagades-projects.vercel.app"
+  "https://time-capsule-1-aptn7m0bx-harshadabarsagades-projects.vercel.app",
+  "https://time-capsule-1.vercel.app"
 ];
 
 const server = http.createServer(app);
