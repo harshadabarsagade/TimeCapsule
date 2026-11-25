@@ -1,13 +1,27 @@
+
 const express = require("express");
 const cors = require("cors");
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://time-capsule-8wyc.vercel.app",
+  "https://time-capsule-1-aptn7m0bx-harshadabarsagades-projects.vercel.app"
+];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
 app.use(express.json({ limit: "20kb" }));
 
 app.get("/", (req, res) => {

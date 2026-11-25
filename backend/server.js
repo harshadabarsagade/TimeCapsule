@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 
 const http = require("http");
@@ -12,10 +13,17 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://time-capsule-8wyc.vercel.app",
+  "https://time-capsule-1-aptn7m0bx-harshadabarsagades-projects.vercel.app"
+];
+
 const server = http.createServer(app);
+
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: allowedOrigins,
     methods: ["GET", "POST"]
   }
 });
@@ -28,7 +36,10 @@ async function startServer() {
   try {
     await connectDB();
     startCapsuleScheduler();
-    server.listen(PORT, () => console.log(`TimeCapsule backend running on http://localhost:${PORT}`));
+
+    server.listen(PORT, () => {
+      console.log(`TimeCapsule backend running on http://localhost:${PORT}`);
+    });
   } catch (error) {
     console.error("Server startup failed:", error.message);
     process.exit(1);
