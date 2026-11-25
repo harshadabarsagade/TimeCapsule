@@ -589,14 +589,16 @@ function Dashboard({
 
                   <p className="message-preview">{capsule.message}</p>
 
-                  {capsule.status === "scheduled" && (
+                  {capsule.status !== "sending" && (
                     <div className="capsule-actions">
-                      <button
-                        className="edit-link"
-                        onClick={() => handleEdit(capsule)}
-                      >
-                        Edit capsule
-                      </button>
+                      {capsule.status === "scheduled" && (
+                        <button
+                          className="edit-link"
+                          onClick={() => handleEdit(capsule)}
+                        >
+                          Edit capsule
+                        </button>
+                      )}
 
                       <button
                         className="delete-link"
